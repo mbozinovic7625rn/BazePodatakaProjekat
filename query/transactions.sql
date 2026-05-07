@@ -97,4 +97,4 @@ END$$
 DELIMITER;
 
 -- Testiranje ove procedure:
--- CALL p_zapocni_sesiju(4, 60), p_zapocni_sesiju(29, 90), p_zapocni_sesiju(34, 60), p_zapocni_sesiju(37, 90)
+-- CALL p_zapocni_sesiju(29, 90), p_zapocni_sesiju(34, 60), p_zapocni_sesiju(37, 90)

@@ -1,15 +1,9 @@
-import forme.LoginFrame;
-
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {
+        if (args.length == 0) {
+            args = new String[] { "database.cfg" };
         }
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+        Launcher.getLauncher().launch(args);
     }
 }

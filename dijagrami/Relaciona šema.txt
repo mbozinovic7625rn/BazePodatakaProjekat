@@ -1,0 +1,178 @@
+
+RELACIONA ŠEMA BAZE PODATAKA: LABORATORIJSKI EKSPERIMENTI I RESURSI
+
+1. LABORATORIJA
+
+* LABORATORIJA (id_lab, naziv, opis_lokacije, BSL_nivo, broj_komora, broj_inkubatora)
+  - id_lab: INT [PK, AUTO_INCREMENT]
+  - naziv: VARCHAR(100) [NN]
+  - opis_lokacije: TEXT
+  - BSL_nivo: INT
+  - broj_komora: INT
+  - broj_inkubatora: INT
+
+
+2. TIP_ALATA
+
+* TIP_ALATA (id_tip_alata, naziv, opis)
+  - id_tip_alata: INT [PK, AUTO_INCREMENT]
+  - naziv: VARCHAR(100) [NN]
+  - opis: TEXT
+
+
+3. RESURS
+
+* RESURS (id_resurs, naziv, tip_resursa, dobavljac, barkod, uslovi_cuvanja, opis)
+  - id_resurs: INT [PK, AUTO_INCREMENT]
+  - naziv: VARCHAR(100) [NN]
+  - tip_resursa: VARCHAR(50)
+  - dobavljac: VARCHAR(100)
+  - barkod: VARCHAR(50)
+  - uslovi_cuvanja: TEXT
+  - opis: TEXT
+
+
+4. TEORIJSKI_OKVIR
+
+* TEORIJSKI_OKVIR (id_teorija, naziv, oblast, opis)
+  - id_teorija: INT [PK, AUTO_INCREMENT]
+  - naziv: VARCHAR(100) [NN]
+  - oblast: VARCHAR(100)
+  - opis: TEXT
+
+
+5. ISTRAZIVAC
+
+* ISTRAZIVAC (id_istrazivac, ime, prezime, kontakt, datum_zaposlenja, naucno_zvanje, oblast_specijalizacije, BSL_sertifikat, id_lab)
+  - id_istrazivac: INT [PK, AUTO_INCREMENT]
+  - ime: VARCHAR(50) [NN]
+  - prezime: VARCHAR(50) [NN]
+  - kontakt: VARCHAR(100)
+  - datum_zaposlenja: DATE
+  - naucno_zvanje: VARCHAR(50)
+  - oblast_specijalizacije: VARCHAR(100)
+  - BSL_sertifikat: BOOLEAN
+  - id_lab: INT [FK -> LABORATORIJA(id_lab)]
+
+
+6. ALAT
+
+* ALAT (id_alat, identifikacioni_broj, datum_nabavke, datum_proizvodnje, datum_kalibracije, id_lab, id_tip_alata)
+  - id_alat: INT [PK, AUTO_INCREMENT]
+  - identifikacioni_broj: VARCHAR(50) [UQ]
+  - datum_nabavke: DATE
+  - datum_proizvodnje: DATE
+  - datum_kalibracije: DATE
+  - id_lab: INT [FK -> LABORATORIJA(id_lab)]
+  - id_tip_alata: INT [FK -> TIP_ALATA(id_tip_alata)]
+
+
+7. INVENTAR_RESURSA
+
+* INVENTAR_RESURSA (id_lab, id_resurs, kolicina, merna_jedinica, status)
+  - id_lab: INT [PK, FK -> LABORATORIJA(id_lab)]
+  - id_resurs: INT [PK, FK -> RESURS(id_resurs)]
+  - kolicina: DECIMAL(10,2)
+  - merna_jedinica: VARCHAR(20)
+  - status: VARCHAR(50)
+
+
+8. DIZAJNER
+
+* DIZAJNER (id_istrazivac)
+  - id_istrazivac: INT [PK, FK -> ISTRAZIVAC(id_istrazivac)]
+
+
+9. IZVODJAC
+
+* IZVODJAC (id_istrazivac)
+  - id_istrazivac: INT [PK, FK -> ISTRAZIVAC(id_istrazivac)]
+
+
+10. EKSPERIMENT
+
+* EKSPERIMENT (id_eksperiment, naziv, tip, hipoteza, trajanje_h, ciljni_parametar, temperatura, pH, vlaznost, parc_pritisak_O2, vremenski_interval_min, id_teorija)
+  - id_eksperiment: INT [PK, AUTO_INCREMENT]
+  - naziv: VARCHAR(100) [NN]
+  - tip: VARCHAR(50)
+  - hipoteza: TEXT
+  - trajanje_h: DECIMAL(10,2)
+  - ciljni_parametar: VARCHAR(100)
+  - temperatura: DECIMAL(5,2)
+  - pH: DECIMAL(4,2)
+  - vlaznost: DECIMAL(5,2)
+  - parc_pritisak_O2: DECIMAL(5,2)
+  - vremenski_interval_min: INT
+  - id_teorija: INT [FK -> TEORIJSKI_OKVIR(id_teorija)]
+
+
+11. DIZAJNER_TEORIJA
+
+* DIZAJNER_TEORIJA (id_istrazivac, id_teorija)
+  - id_istrazivac: INT [PK, FK -> DIZAJNER(id_istrazivac)]
+  - id_teorija: INT [PK, FK -> TEORIJSKI_OKVIR(id_teorija)]
+
+
+12. EKSPERIMENT_DIZAJNER
+
+* EKSPERIMENT_DIZAJNER (id_eksperiment, id_istrazivac)
+  - id_eksperiment: INT [PK, FK -> EKSPERIMENT(id_eksperiment)]
+  - id_istrazivac: INT [PK, FK -> DIZAJNER(id_istrazivac)]
+
+13. EKSPERIMENT_RESURS
+
+* EKSPERIMENT_RESURS (id_eksperiment, id_resurs, potrebna_kolicina)
+  - id_eksperiment: INT [PK, FK -> EKSPERIMENT(id_eksperiment)]
+  - id_resurs: INT [PK, FK -> RESURS(id_resurs)]
+  - potrebna_kolicina: DECIMAL(10,2)
+
+
+14. EKSPERIMENT_TIP_ALATA
+
+* EKSPERIMENT_TIP_ALATA (id_eksperiment, id_tip_alata)
+  - id_eksperiment: INT [PK, FK -> EKSPERIMENT(id_eksperiment)]
+  - id_tip_alata: INT [PK, FK -> TIP_ALATA(id_tip_alata)]
+
+
+15. IZVODJENJE
+
+* IZVODJENJE (id_izvodjenje, datum, status, id_eksperiment, id_lab)
+  - id_izvodjenje: INT [PK, AUTO_INCREMENT]
+  - datum: DATE
+  - status: VARCHAR(50)
+  - id_eksperiment: INT [FK -> EKSPERIMENT(id_eksperiment)]
+  - id_lab: INT [FK -> LABORATORIJA(id_lab)]
+
+
+16. IZVODJENJE_IZVODJAC
+
+* IZVODJENJE_IZVODJAC (id_izvodjenje, id_istrazivac, uloga, putanja_beleski)
+  - id_izvodjenje: INT [PK, FK -> IZVODJENJE(id_izvodjenje)]
+  - id_istrazivac: INT [PK, FK -> IZVODJAC(id_istrazivac)]
+  - uloga: VARCHAR(100)
+  - putanja_beleski: VARCHAR(255)
+
+
+17. SESIJA
+
+* SESIJA (id_sesija, datum, vreme_pocetka, vreme_zavrsetka, id_izvodjenje)
+  - id_sesija: INT [PK, AUTO_INCREMENT]
+  - datum: DATE
+  - vreme_pocetka: TIME
+  - vreme_zavrsetka: TIME
+  - id_izvodjenje: INT [FK -> IZVODJENJE(id_izvodjenje)]
+
+
+18. SESIJA_RESURS
+
+* SESIJA_RESURS (id_sesija, id_resurs, iskoriscena_kolicina)
+  - id_sesija: INT [PK, FK -> SESIJA(id_sesija)]
+  - id_resurs: INT [PK, FK -> RESURS(id_resurs)]
+  - iskoriscena_kolicina: DECIMAL(10,2)
+
+
+19. SESIJA_ALAT
+
+* SESIJA_ALAT (id_sesija, id_alat)
+  - id_sesija: INT [PK, FK -> SESIJA(id_sesija)]
+  - id_alat: INT [PK, FK -> ALAT(id_alat)]
